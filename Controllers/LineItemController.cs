@@ -24,17 +24,17 @@ namespace Bangazon.Controllers
         [HttpGet]
          public IActionResult Get()
         {
-            IQueryable<object> customers = from customer in context.Customer select customer;
+            IQueryable<object> lineItems = from lineItem in context.LineItem select lineItem;
 
-            if (customers == null)
+            if (lineItems == null)
             {
                 return NotFound();
             }
 
-            return Ok(customers);
+            return Ok(lineItems);
 
         }
-        [HttpGet("{id}", Name = "GetCustomer")]
+        [HttpGet("{id}", Name = "GetLineItem")]
         public IActionResult Get([FromRoute] int id)
         {
             if (!ModelState.IsValid)
@@ -44,14 +44,14 @@ namespace Bangazon.Controllers
 
             try
             {
-                Customer customer = context.Customer.Single(m => m.CustomerId == id);
+                LineItem lineItem = context.LineItem.Single(m => m.LineItemId == id);
 
-                if (customer == null)
+                if (lineItem == null)
                 {
                     return NotFound();
                 }
                 
-                return Ok(customer);
+                return Ok(lineItem);
             }
             catch (System.InvalidOperationException ex)
             {
@@ -63,21 +63,21 @@ namespace Bangazon.Controllers
 
         // POST api/values
         [HttpPost]
-        public IActionResult Post([FromBody] Models.Customer customer)
+        public IActionResult Post([FromBody] Models.LineItem lineItem)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            context.Customer.Add(customer);
+            context.LineItem.Add(lineItem);
             try
             {
                 context.SaveChanges();
             }
             catch (DbUpdateException)
             {
-                if (CustomerExists(customer.CustomerId))
+                if (LineItemExists(lineItem.LineItemId))
                 {
                     return new StatusCodeResult(StatusCodes.Status409Conflict);
                 }
@@ -87,25 +87,25 @@ namespace Bangazon.Controllers
                 }
             }
 
-            return CreatedAtRoute("GetCustomer", new { id = customer.CustomerId }, customer);
+            return CreatedAtRoute("GetLineItem", new { id = lineItem.LineItemId }, lineItem);
         }
 
         // PUT api/values/5
         [HttpPut("{id}")]
-        public IActionResult Put(int id, [FromBody] Customer customer)
+        public IActionResult Put(int id, [FromBody] LineItem lineItem)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if (id != customer.CustomerId )
+            if (id != lineItem.LineItemId )
             {
                 return BadRequest();
             } 
             if (ModelState.IsValid)
             {
-                context.Entry(customer).State = EntityState.Modified;
+                context.Entry(lineItem).State = EntityState.Modified;
             }
            
             try 
@@ -114,7 +114,7 @@ namespace Bangazon.Controllers
             } 
             catch (DbUpdateConcurrencyException)
             {
-                if (!CustomerExists(id))
+                if (!LineItemExists(id))
                 {
                     return NotFound();
                 }
@@ -124,7 +124,7 @@ namespace Bangazon.Controllers
                 }
 
             } 
-            return Ok(customer);
+            return Ok(lineItem);
         }  
                                                                        
 
@@ -136,21 +136,21 @@ namespace Bangazon.Controllers
             {
                 return BadRequest(ModelState);
             }
-            Customer customer = context.Customer.Single(m => m.CustomerId == id);
+            LineItem lineItem = context.LineItem.Single(m => m.LineItemId == id);
 
-            if (customer == null)
+            if (lineItem == null)
             {
                 return NotFound();
             }
-            context.Customer.Remove (customer);
+            context.LineItem.Remove (lineItem);
             context.SaveChanges();
-            return Ok(customer);
+            return Ok(lineItem);
         }
            
            
-         private bool CustomerExists(int id)
+         private bool LineItemExists(int id)
         {
-            return context.Customer.Count(e => e.CustomerId == id) > 0;
+            return context.LineItem.Count(e => e.LineItemId == id) > 0;
         }
     }
 }
